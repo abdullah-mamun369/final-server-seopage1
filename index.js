@@ -3,6 +3,8 @@ const cors = require('cors');
 const app = express();
 const port = process.env.PORT || 4000;
 const multer = require("multer");
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
+const cloudinary = require('cloudinary').v2;
 const path = require("path");
 const mongoose = require("mongoose");
 require("dotenv").config();
@@ -65,6 +67,54 @@ app.get('/todos', async (req, res) => {
         res.status(500).send({ message: "Failed to fetch users" });
     }
 });
+
+
+// File upload folder
+const fs = require('fs');
+const UPLOAD_FOLDER = "./uploads/";
+
+
+if (!fs.existsSync(UPLOAD_FOLDER)) {
+    fs.mkdirSync(UPLOAD_FOLDER);
+}
+
+
+//upload data extentions
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, UPLOAD_FOLDER);
+    },
+    filename: function (req, file, cb) {
+        const fileExt = path.extname(file.originalname);
+        const fileName = file.originalname.replace(fileExt, "").toLowerCase().split(" ").join("-") + "-" + Date.now();
+        cb(null, fileName + fileExt);
+    }
+});
+
+
+// File upload restriction
+const upload = multer({
+    storage: storage,
+    limits: {
+        fileSize: 1024 * 1024 * 20 // 20MB
+    }
+});
+
+
+
+// Route to upload file
+app.post('/upload', upload.single("file"), (req, res) => {
+    UserModel.create({ image: req.file.filename })  // Corrected to req.file
+        .then(result => res.json(result))
+        .catch(err => {
+            console.error(err);
+            res.status(500).send("Error saving file information");
+        });
+});
+
+
+
+
 
 
 // Default route
