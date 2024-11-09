@@ -15,9 +15,9 @@ app.use(express.json());
 
 
 cloudinary.config({
-    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-    api_key: process.env.CLOUDINARY_API_KEY,
-    api_secret: process.env.CLOUDINARY_API_SECRET,
+    cloud_name: "drek3hhei",
+    api_key: "124347812715975",
+    api_secret: "T1ET7aguL28wqAFbEVkVDl9zSFA",
 });
 
 const storage = new CloudinaryStorage({
@@ -39,7 +39,7 @@ const upload = multer({ storage: storage });
 
 
 // MongoDB connection using Mongoose
-mongoose.connect(`mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@jobinterview.vky0v.mongodb.net/todoList?retryWrites=true&w=majority`)
+mongoose.connect(`mongodb+srv://mamunbdcontact:vxiU36aC5NFvx6oc@jobinterview.vky0v.mongodb.net/todoList?retryWrites=true&w=majority`)
     .then(() => console.log("Connected to MongoDB successfully"))
     .catch(err => console.error("Failed to connect to MongoDB:", err));
 
